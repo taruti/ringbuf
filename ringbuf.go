@@ -27,6 +27,15 @@ func (r *T[E]) Add(e E) {
 	r.len++
 }
 
+// Add an element and return a pointer to it, that is valid till the next
+// operation on this ringbuffer.
+func (r *T[E]) AddAndRef(e E) *E {
+	idx := r.len % r.cap
+	r.buf[idx] = e
+	r.len++
+	return &r.buf[idx]
+}
+
 func (r *T[E]) Len() int {
 	if r.len > r.cap {
 		return r.cap

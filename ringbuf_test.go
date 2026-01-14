@@ -46,6 +46,12 @@ func testIts[E comparable](t *testing.T, r *T[E], es ...E) {
 	if r.Len() != l {
 		t.Fatal("Length should be", l)
 	}
+	if r.Len() > 0 && *r.BackRef(0) != es[len(es)-1] {
+		t.Fatalf("Backref 0 fail, %#v: BackRef=%v != %v", es, *r.BackRef(0), es[len(es)-1])
+	}
+	if r.Len() > 1 && *r.BackRef(1) != es[len(es)-2] {
+		t.Fatalf("Backref 1 fail, %#v: BackRef=%v != %v", es, *r.BackRef(0), es[len(es)-1])
+	}
 	it := 0
 	for x := range r.All() {
 		if x != es[it] {

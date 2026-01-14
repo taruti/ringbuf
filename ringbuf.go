@@ -36,6 +36,14 @@ func (r *T[E]) AddAndRef(e E) *E {
 	return &r.buf[idx]
 }
 
+// Reference index in the past.
+// 0 current element
+// 1 last element
+func (r *T[E]) BackRef(revidx int) *E {
+	idx := (r.len - (1 + revidx)) % r.cap
+	return &r.buf[idx]
+}
+
 func (r *T[E]) Len() int {
 	if r.len > r.cap {
 		return r.cap

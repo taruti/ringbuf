@@ -99,3 +99,7 @@ func (r *T[E]) Reverse() iter.Seq[E] {
 		}
 	}
 }
+
+func (r *T[E]) UnsortedSlice() []E {
+	return r.buf
+}

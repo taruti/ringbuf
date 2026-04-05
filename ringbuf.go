@@ -40,7 +40,14 @@ func (r *T[E]) AddAndRef(e E) *E {
 // 0 current element
 // 1 last element
 func (r *T[E]) BackRef(revidx int) *E {
-	idx := (r.len - (1 + revidx)) % r.cap
+	currentLen := r.Len()
+
+	if revidx < 0 || revidx >= currentLen {
+		return nil
+	}
+
+	idx := ((r.len-1-revidx)%r.cap + r.cap) % r.cap
+
 	return &r.buf[idx]
 }
 
@@ -77,24 +84,10 @@ func (r *T[E]) All() iter.Seq[E] {
 
 func (r *T[E]) Reverse() iter.Seq[E] {
 	return func(yield func(E) bool) {
-		if r.len <= r.cap {
-			for it := r.len - 1; it >= 0; it-- {
-				if !yield(r.buf[it]) {
-					return
-				}
-
-			}
-		} else {
-			start := r.len % r.cap
-			for it := start - 1; it >= 0; it-- {
-				if !yield(r.buf[it]) {
-					return
-				}
-			}
-			for it := r.cap - 1; it >= start; it-- {
-				if !yield(r.buf[it]) {
-					return
-				}
+		length := r.Len()
+		for i := 0; i < length; i++ {
+			if !yield(*r.BackRef(i)) {
+				return
 			}
 		}
 	}

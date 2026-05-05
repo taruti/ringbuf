@@ -71,5 +71,13 @@ func testIts[E comparable](t *testing.T, r *T[E], es ...E) {
 	if it != 0 {
 		t.Fatal("Reverse Iterations countdown should be 0")
 	}
-
+	ss := r.SortedSlice()
+	if len(ss) != len(es) {
+		t.Fatal("SortedSlice wrong length")
+	}
+	for i := range ss {
+		if ss[i] != es[i] {
+			t.Fatal("SortedSlice wrong value")
+		}
+	}
 }

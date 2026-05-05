@@ -96,3 +96,26 @@ func (r *T[E]) Reverse() iter.Seq[E] {
 func (r *T[E]) UnsortedSlice() []E {
 	return r.buf
 }
+
+func (r *T[E]) SortedSlice() []E {
+	if r.len <= r.cap {
+		res := make([]E, r.len)
+		for i, e := range r.buf[:r.len] {
+			res[i] = e
+		}
+		return res
+	}
+	start := r.len % r.cap
+	res := make([]E, r.cap)
+	i := 0
+	for _, e := range r.buf[start:] {
+		res[i] = e
+		i++
+	}
+
+	for _, e := range r.buf[:start] {
+		res[i] = e
+		i++
+	}
+	return res
+}
